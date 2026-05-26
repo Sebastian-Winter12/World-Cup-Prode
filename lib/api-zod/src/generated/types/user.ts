@@ -13,5 +13,11 @@ export interface User {
   email: string;
   /** @nullable */
   avatarUrl?: string | null;
+  theme: string;
+  language: string;
+  notifMatchReminders: boolean;
+  notifGroupActivity: boolean;
+  notifLeaderboard: boolean;
+  notifAnnouncements: boolean;
   createdAt: string;
 }

@@ -1,4 +1,4 @@
-import { MatchWithPrediction } from "@workspace/api-client-react/src/generated/api.schemas";
+import { MatchWithPrediction } from "@workspace/api-client-react";
 import { format } from "date-fns";
 import { Link } from "wouter";
 import { Card } from "@/components/ui/card";

@@ -25,6 +25,12 @@ export const GetMeResponse = zod.object({
   "username": zod.string(),
   "email": zod.string(),
   "avatarUrl": zod.string().nullish(),
+  "theme": zod.string(),
+  "language": zod.string(),
+  "notifMatchReminders": zod.boolean(),
+  "notifGroupActivity": zod.boolean(),
+  "notifLeaderboard": zod.boolean(),
+  "notifAnnouncements": zod.boolean(),
   "createdAt": zod.string()
 })
 
@@ -34,7 +40,13 @@ export const GetMeResponse = zod.object({
  */
 export const UpdateMeBody = zod.object({
   "username": zod.string().optional(),
-  "avatarUrl": zod.string().optional()
+  "avatarUrl": zod.string().optional(),
+  "theme": zod.string().optional(),
+  "language": zod.string().optional(),
+  "notifMatchReminders": zod.boolean().optional(),
+  "notifGroupActivity": zod.boolean().optional(),
+  "notifLeaderboard": zod.boolean().optional(),
+  "notifAnnouncements": zod.boolean().optional()
 })
 
 export const UpdateMeResponse = zod.object({
@@ -43,7 +55,26 @@ export const UpdateMeResponse = zod.object({
   "username": zod.string(),
   "email": zod.string(),
   "avatarUrl": zod.string().nullish(),
+  "theme": zod.string(),
+  "language": zod.string(),
+  "notifMatchReminders": zod.boolean(),
+  "notifGroupActivity": zod.boolean(),
+  "notifLeaderboard": zod.boolean(),
+  "notifAnnouncements": zod.boolean(),
   "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Get current user statistics
+ */
+export const GetMyStatsResponse = zod.object({
+  "predictionsCount": zod.number(),
+  "correctWinners": zod.number(),
+  "exactScores": zod.number(),
+  "totalPoints": zod.number(),
+  "groupsCount": zod.number(),
+  "avgPointsPerPrediction": zod.number()
 })
 
 

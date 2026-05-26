@@ -27,4 +27,5 @@ export * from './predictionOrNull';
 export * from './scoreUpdate';
 export * from './scoreUpdateStatus';
 export * from './user';
+export * from './userStats';
 export * from './userUpdate';

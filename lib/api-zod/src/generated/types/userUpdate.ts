@@ -9,4 +9,10 @@
 export interface UserUpdate {
   username?: string;
   avatarUrl?: string;
+  theme?: string;
+  language?: string;
+  notifMatchReminders?: boolean;
+  notifGroupActivity?: boolean;
+  notifLeaderboard?: boolean;
+  notifAnnouncements?: boolean;
 }

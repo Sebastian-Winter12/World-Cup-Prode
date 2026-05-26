@@ -14,6 +14,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
+import { useI18n } from "@/i18n/context";
 
 const createGroupSchema = z.object({
   name: z.string().min(1, "Name is required").max(50),
@@ -25,6 +26,7 @@ const joinGroupSchema = z.object({
 });
 
 export default function Groups() {
+  const { t } = useI18n();
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const { data: groups, isLoading } = useListMyGroups();
@@ -47,13 +49,13 @@ export default function Groups() {
   const onCreateSubmit = (values: z.infer<typeof createGroupSchema>) => {
     createGroup.mutate({ data: values }, {
       onSuccess: () => {
-        toast({ title: "Group created successfully" });
+        toast({ title: t.groups.groupCreated });
         queryClient.invalidateQueries({ queryKey: ["/api/groups"] });
         setIsCreateOpen(false);
         createForm.reset();
       },
-      onError: (err) => {
-        toast({ title: "Failed to create group", variant: "destructive" });
+      onError: () => {
+        toast({ title: t.groups.failedCreate, variant: "destructive" });
       }
     });
   };
@@ -61,13 +63,13 @@ export default function Groups() {
   const onJoinSubmit = (values: z.infer<typeof joinGroupSchema>) => {
     joinGroup.mutate({ data: values }, {
       onSuccess: () => {
-        toast({ title: "Joined group successfully" });
+        toast({ title: t.groups.joinedGroup });
         queryClient.invalidateQueries({ queryKey: ["/api/groups"] });
         setIsJoinOpen(false);
         joinForm.reset();
       },
-      onError: (err) => {
-        toast({ title: "Failed to join group", description: "Invalid code or already joined", variant: "destructive" });
+      onError: () => {
+        toast({ title: t.groups.failedJoin, description: t.groups.invalidCode, variant: "destructive" });
       }
     });
   };
@@ -78,22 +80,22 @@ export default function Groups() {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
             <h1 className="text-3xl md:text-4xl font-display font-bold tracking-tight mb-2">
-              My Groups
+              {t.groups.title}
             </h1>
             <p className="text-muted-foreground text-lg">
-              Compete with friends, family, and colleagues.
+              {t.groups.subtitle}
             </p>
           </div>
           <div className="flex items-center gap-3">
             <Dialog open={isJoinOpen} onOpenChange={setIsJoinOpen}>
               <DialogTrigger asChild>
                 <Button variant="secondary" className="gap-2">
-                  <Hash className="h-4 w-4" /> Join via Code
+                  <Hash className="h-4 w-4" /> {t.groups.joinViaCode}
                 </Button>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>Join a Group</DialogTitle>
+                  <DialogTitle>{t.groups.joinGroup}</DialogTitle>
                 </DialogHeader>
                 <Form {...joinForm}>
                   <form onSubmit={joinForm.handleSubmit(onJoinSubmit)} className="space-y-4">
@@ -102,16 +104,16 @@ export default function Groups() {
                       name="inviteCode"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Invite Code</FormLabel>
+                          <FormLabel>{t.groups.inviteCode}</FormLabel>
                           <FormControl>
-                            <Input placeholder="Enter 6-digit code" {...field} />
+                            <Input placeholder={t.groups.inviteCodePlaceholder} {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
                     <Button type="submit" className="w-full" disabled={joinGroup.isPending}>
-                      {joinGroup.isPending ? "Joining..." : "Join Group"}
+                      {joinGroup.isPending ? t.groups.joining : t.groups.joinGroup}
                     </Button>
                   </form>
                 </Form>
@@ -121,12 +123,12 @@ export default function Groups() {
             <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
               <DialogTrigger asChild>
                 <Button className="gap-2">
-                  <Plus className="h-4 w-4" /> Create Group
+                  <Plus className="h-4 w-4" /> {t.groups.createGroup}
                 </Button>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>Create a New Group</DialogTitle>
+                  <DialogTitle>{t.groups.createNewGroup}</DialogTitle>
                 </DialogHeader>
                 <Form {...createForm}>
                   <form onSubmit={createForm.handleSubmit(onCreateSubmit)} className="space-y-4">
@@ -135,9 +137,9 @@ export default function Groups() {
                       name="name"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Group Name</FormLabel>
+                          <FormLabel>{t.groups.groupName}</FormLabel>
                           <FormControl>
-                            <Input placeholder="e.g. Office Pool" {...field} />
+                            <Input placeholder={t.groups.groupNamePlaceholder} {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -148,16 +150,16 @@ export default function Groups() {
                       name="description"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Description (Optional)</FormLabel>
+                          <FormLabel>{t.groups.description}</FormLabel>
                           <FormControl>
-                            <Input placeholder="A few words about this group" {...field} />
+                            <Input placeholder={t.groups.descriptionPlaceholder} {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
                     <Button type="submit" className="w-full" disabled={createGroup.isPending}>
-                      {createGroup.isPending ? "Creating..." : "Create Group"}
+                      {createGroup.isPending ? t.groups.creating : t.groups.createGroup}
                     </Button>
                   </form>
                 </Form>
@@ -178,7 +180,7 @@ export default function Groups() {
                   <div className="flex justify-between items-start mb-4">
                     <h3 className="font-display font-bold text-xl">{group.name}</h3>
                     <div className="bg-muted px-2 py-1 rounded text-xs font-mono font-medium">
-                      Code: {group.inviteCode}
+                      {t.groups.code}: {group.inviteCode}
                     </div>
                   </div>
                   {group.description && (
@@ -189,10 +191,10 @@ export default function Groups() {
                   <div className="flex justify-between items-center mt-auto pt-4 border-t border-border">
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
                       <Users className="h-4 w-4" />
-                      <span>{group.memberCount} members</span>
+                      <span>{group.memberCount} {t.groups.rank === "Rank" ? "members" : "miembros"}</span>
                     </div>
                     <div className="text-sm font-medium">
-                      Rank: <span className="text-accent">#{group.myRank}</span>
+                      {t.groups.rank}: <span className="text-accent">#{group.myRank}</span>
                     </div>
                   </div>
                 </Card>
@@ -203,8 +205,8 @@ export default function Groups() {
           <div className="text-center py-20 bg-card rounded-xl border border-border flex flex-col items-center justify-center gap-4">
             <Users className="h-12 w-12 text-muted-foreground" />
             <div className="space-y-1">
-              <h3 className="text-xl font-bold">No Groups Yet</h3>
-              <p className="text-muted-foreground">Join an existing group or create a new one to start competing.</p>
+              <h3 className="text-xl font-bold">{t.groups.noGroups}</h3>
+              <p className="text-muted-foreground">{t.groups.noGroupsDesc}</p>
             </div>
           </div>
         )}

@@ -54,42 +54,42 @@
 }
 
 :root {
-  /* DARK FIRST DESIGN */
-  --background: 222 47% 4%;
-  --foreground: 210 40% 98%;
+  /* LIGHT THEME */
+  --background: 210 40% 98%;
+  --foreground: 222 47% 11%;
 
-  --card: 222 47% 6%;
-  --card-foreground: 210 40% 98%;
-  --card-border: 217 33% 15%;
+  --card: 0 0% 100%;
+  --card-foreground: 222 47% 11%;
+  --card-border: 214 32% 88%;
 
-  --popover: 222 47% 6%;
-  --popover-foreground: 210 40% 98%;
-  --popover-border: 217 33% 15%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222 47% 11%;
+  --popover-border: 214 32% 88%;
 
   /* Football Green */
-  --primary: 142 71% 45%;
-  --primary-foreground: 144 100% 11%;
-  
-  /* Deep Navy */
-  --secondary: 217 33% 17%;
-  --secondary-foreground: 210 40% 98%;
+  --primary: 142 71% 38%;
+  --primary-foreground: 0 0% 100%;
 
-  --muted: 217 33% 15%;
-  --muted-foreground: 215 20.2% 65.1%;
+  /* Light Navy */
+  --secondary: 214 32% 91%;
+  --secondary-foreground: 222 47% 11%;
+
+  --muted: 210 40% 94%;
+  --muted-foreground: 215 16% 47%;
 
   /* Gold accents */
-  --accent: 43 74% 66%;
+  --accent: 43 74% 55%;
   --accent-foreground: 43 100% 11%;
 
-  --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 210 40% 98%;
+  --destructive: 0 72% 51%;
+  --destructive-foreground: 0 0% 100%;
 
-  --success: 142 71% 45%;
-  --success-foreground: 144 100% 11%;
+  --success: 142 71% 38%;
+  --success-foreground: 0 0% 100%;
 
-  --border: 217 33% 17%;
-  --input: 217 33% 17%;
-  --ring: 142 71% 45%;
+  --border: 214 32% 88%;
+  --input: 214 32% 91%;
+  --ring: 142 71% 38%;
 
   --radius: 0.75rem;
 }
@@ -116,6 +116,8 @@
   --border: 217 33% 17%;
   --input: 217 33% 17%;
   --ring: 142 71% 45%;
+  --success: 142 71% 45%;
+  --success-foreground: 144 100% 11%;
 }
 
 @layer base {

@@ -35,6 +35,7 @@ import type {
   PredictionInput,
   ScoreUpdate,
   User,
+  UserStats,
   UserUpdate
 } from './api.schemas';
 
@@ -274,6 +275,153 @@ export const useUpdateMe = <TError = ErrorType<unknown>,
       > => {
       return useMutation(getUpdateMeMutationOptions(options));
     }
+
+export const getDeleteMeUrl = () => {
+
+
+
+
+  return `/api/users/me`
+}
+
+/**
+ * @summary Delete current user account
+ */
+export const deleteMe = async ( options?: RequestInit): Promise<void> => {
+
+  return customFetch<void>(getDeleteMeUrl(),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+export const getDeleteMeMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteMe>>, TError,void, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteMe>>, TError,void, TContext> => {
+
+const mutationKey = ['deleteMe'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteMe>>, void> = () => {
+
+
+          return  deleteMe(requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteMeMutationResult = NonNullable<Awaited<ReturnType<typeof deleteMe>>>
+
+    export type DeleteMeMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Delete current user account
+ */
+export const useDeleteMe = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteMe>>, TError,void, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof deleteMe>>,
+        TError,
+        void,
+        TContext
+      > => {
+      return useMutation(getDeleteMeMutationOptions(options));
+    }
+
+export const getGetMyStatsUrl = () => {
+
+
+
+
+  return `/api/users/me/stats`
+}
+
+/**
+ * @summary Get current user statistics
+ */
+export const getMyStats = async ( options?: RequestInit): Promise<UserStats> => {
+
+  return customFetch<UserStats>(getGetMyStatsUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetMyStatsQueryKey = () => {
+    return [
+    `/api/users/me/stats`
+    ] as const;
+    }
+
+
+export const getGetMyStatsQueryOptions = <TData = Awaited<ReturnType<typeof getMyStats>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getMyStats>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetMyStatsQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getMyStats>>> = ({ signal }) => getMyStats({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getMyStats>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetMyStatsQueryResult = NonNullable<Awaited<ReturnType<typeof getMyStats>>>
+export type GetMyStatsQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Get current user statistics
+ */
+
+export function useGetMyStats<TData = Awaited<ReturnType<typeof getMyStats>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getMyStats>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetMyStatsQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
 
 export const getListMyGroupsUrl = () => {
 

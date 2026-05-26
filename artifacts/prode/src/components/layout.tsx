@@ -1,9 +1,14 @@
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { Trophy, Home, Users, UserCircle, LogOut, Menu } from "lucide-react";
-import { useClerk, useUser } from "@clerk/react";
+import { useClerk } from "@clerk/react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { useI18n } from "@/i18n/context";
+import { useTheme } from "@/contexts/theme-context";
+import { useGetMe } from "@workspace/api-client-react";
+import type { Language } from "@/i18n/translations";
+import type { Theme } from "@/contexts/theme-context";
 
 interface LayoutProps {
   children: ReactNode;
@@ -12,13 +17,26 @@ interface LayoutProps {
 export function Layout({ children }: LayoutProps) {
   const [location] = useLocation();
   const { signOut } = useClerk();
+  const { t, setLang } = useI18n();
+  const { setTheme } = useTheme();
   const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
 
+  const { data: user } = useGetMe();
+
+  useEffect(() => {
+    if (user) {
+      const dbLang = user.language as Language;
+      if (dbLang === "en" || dbLang === "es") setLang(dbLang);
+      const dbTheme = user.theme as Theme;
+      if (dbTheme === "light" || dbTheme === "dark" || dbTheme === "system") setTheme(dbTheme);
+    }
+  }, [user?.language, user?.theme]);
+
   const navItems = [
-    { href: "/dashboard", label: "Dashboard", icon: Home },
-    { href: "/matches", label: "Matches", icon: Trophy },
-    { href: "/groups", label: "Groups", icon: Users },
-    { href: "/profile", label: "Profile", icon: UserCircle },
+    { href: "/dashboard", label: t.nav.dashboard, icon: Home },
+    { href: "/matches", label: t.nav.matches, icon: Trophy },
+    { href: "/groups", label: t.nav.groups, icon: Users },
+    { href: "/profile", label: t.nav.profile, icon: UserCircle },
   ];
 
   const NavLinks = () => (
@@ -45,14 +63,13 @@ export function Layout({ children }: LayoutProps) {
         className="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-destructive hover:bg-destructive/10 w-full mt-auto"
       >
         <LogOut className="h-5 w-5" />
-        Log out
+        {t.nav.signOut}
       </button>
     </>
   );
 
   return (
     <div className="min-h-screen bg-background flex flex-col md:flex-row">
-      {/* Mobile Header */}
       <header className="md:hidden flex items-center justify-between p-4 border-b bg-card sticky top-0 z-50">
         <div className="flex items-center gap-2">
           <Trophy className="h-6 w-6 text-primary" />
@@ -74,7 +91,6 @@ export function Layout({ children }: LayoutProps) {
         </Sheet>
       </header>
 
-      {/* Desktop Sidebar */}
       <aside className="hidden md:flex flex-col w-64 border-r bg-card min-h-screen sticky top-0">
         <div className="p-6 flex items-center gap-3 mb-6">
           <Trophy className="h-8 w-8 text-primary" />
@@ -85,7 +101,6 @@ export function Layout({ children }: LayoutProps) {
         </nav>
       </aside>
 
-      {/* Main Content */}
       <main className="flex-1 flex flex-col w-full max-w-full overflow-x-hidden">
         {children}
       </main>

@@ -1,0 +1,128 @@
+Profile & Settings Page
+
+Create a complete Profile & Settings page accessible from the user menu.
+
+Profile Section
+
+Display the following user information:
+
+Profile picture
+Username
+Email address
+Account creation date
+Number of groups joined
+Total predictions submitted
+Total points earned across all groups
+Current best group ranking
+
+Allow the user to edit:
+
+Username
+Email address
+Password
+
+Security requirements:
+
+Current password must be entered before changing email or password.
+After changing the email or password, automatically log the user out and require them to sign in again.
+Validate username uniqueness.
+Validate email uniqueness.
+Profile Pictures
+
+Allow users to choose a profile picture from a gallery of default avatars.
+
+Requirements:
+
+Include at least 20 simple illustrated avatars.
+Sports-themed, football-themed, male, female, and neutral avatar options.
+Avatar selection updates instantly.
+Store avatar choice in the database.
+No image upload functionality is required initially.
+User Statistics
+
+Display personal statistics such as:
+
+Predictions submitted
+Correct winner predictions
+Exact score predictions
+Total points
+Average points per match
+Best prediction streak
+Favorite predicted team
+Ranking history chart
+Appearance Settings
+
+Allow the user to customize the application appearance:
+
+Light Mode
+Dark Mode
+System Default Mode
+
+Requirements:
+
+Theme changes instantly.
+Save preference in the database.
+Apply the selected theme across the entire application.
+Language Settings
+
+Allow users to switch the entire application language between:
+
+English
+Spanish
+
+Requirements:
+
+All menus
+Buttons
+Forms
+Notifications
+Error messages
+Leaderboards
+Match pages
+Group pages
+Profile pages
+
+must automatically update to the selected language.
+
+Implement a complete internationalization (i18n) system so new languages can be added later.
+
+Store the selected language in the database and load it automatically when the user logs in.
+
+Notification Settings
+
+Add toggles for:
+
+Match reminders
+Group activity notifications
+Leaderboard updates
+Important tournament announcements
+
+Store preferences per user.
+
+Account Actions
+
+Include:
+
+Log out button
+Delete account button
+
+Delete account requirements:
+
+Show confirmation modal.
+Require password confirmation.
+Remove user from all groups.
+Delete all predictions made by the user.
+UI Requirements
+
+Use a modern sports-style design consistent with the rest of the application.
+
+Include:
+
+Profile card
+Avatar gallery modal
+Statistics cards
+Settings sections
+Responsive mobile layout
+Smooth animations and transitions
+
+The Profile & Settings page must be fully functional and connected to the database, not a mockup or placeholder screen.

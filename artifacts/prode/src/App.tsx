@@ -7,6 +7,8 @@ import { QueryClient, QueryClientProvider, useQueryClient } from "@tanstack/reac
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
+import { ThemeProvider } from "@/contexts/theme-context";
+import { I18nProvider } from "@/i18n/context";
 
 import Dashboard from "@/pages/dashboard";
 import Matches from "@/pages/matches";
@@ -17,7 +19,6 @@ import Profile from "@/pages/profile";
 
 const queryClient = new QueryClient();
 
-// REQUIRED
 const clerkPubKey = publishableKeyFromHost(
   window.location.hostname,
   import.meta.env.VITE_CLERK_PUBLISHABLE_KEY,
@@ -193,9 +194,13 @@ function ClerkProviderWithRoutes() {
 
 function App() {
   return (
-    <WouterRouter base={basePath}>
-      <ClerkProviderWithRoutes />
-    </WouterRouter>
+    <ThemeProvider>
+      <I18nProvider>
+        <WouterRouter base={basePath}>
+          <ClerkProviderWithRoutes />
+        </WouterRouter>
+      </I18nProvider>
+    </ThemeProvider>
   );
 }
 

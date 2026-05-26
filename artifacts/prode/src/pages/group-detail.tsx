@@ -6,19 +6,21 @@ import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
 import { Users, LogOut, Copy, Trophy } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ProdeAvatar } from "@/components/prode-avatar";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { useQueryClient } from "@tanstack/react-query";
+import { useI18n } from "@/i18n/context";
 
 export default function GroupDetail() {
   const { groupId } = useParams();
   const id = parseInt(groupId || "0", 10);
   const { toast } = useToast();
+  const { t } = useI18n();
   const [, setLocation] = useLocation();
   const queryClient = useQueryClient();
 
   const { data: group, isLoading } = useGetGroup(id, {
-    query: { enabled: !!id }
+    query: { enabled: !!id } as any
   });
 
   const leaveGroup = useLeaveGroup();
@@ -27,8 +29,8 @@ export default function GroupDetail() {
     if (group?.inviteCode) {
       navigator.clipboard.writeText(group.inviteCode);
       toast({
-        title: "Copied to clipboard",
-        description: `Invite code ${group.inviteCode} copied.`,
+        title: t.groupDetail.copied,
+        description: t.groupDetail.copiedDesc.replace("{code}", group.inviteCode),
       });
     }
   };
@@ -36,12 +38,12 @@ export default function GroupDetail() {
   const handleLeaveGroup = () => {
     leaveGroup.mutate({ groupId: id }, {
       onSuccess: () => {
-        toast({ title: "Left group successfully" });
+        toast({ title: t.groupDetail.leftGroup });
         queryClient.invalidateQueries({ queryKey: ["/api/groups"] });
         setLocation("/groups");
       },
       onError: () => {
-        toast({ title: "Failed to leave group", variant: "destructive" });
+        toast({ title: t.groupDetail.failedLeave, variant: "destructive" });
       }
     });
   };
@@ -57,7 +59,6 @@ export default function GroupDetail() {
     );
   }
 
-  // Sort members by points descending
   const sortedMembers = [...group.members].sort((a, b) => b.points - a.points);
 
   return (
@@ -74,7 +75,7 @@ export default function GroupDetail() {
             <div className="flex items-center gap-4 text-sm font-medium">
               <div className="flex items-center gap-2 px-3 py-1.5 bg-muted rounded-md text-foreground">
                 <Users className="h-4 w-4" />
-                {group.members.length} members
+                {group.members.length} {t.groupDetail.members}
               </div>
               <Button variant="outline" size="sm" onClick={handleCopyCode} className="gap-2 font-mono h-8">
                 <Copy className="h-4 w-4" />
@@ -86,20 +87,20 @@ export default function GroupDetail() {
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button variant="destructive" className="gap-2">
-                <LogOut className="h-4 w-4" /> Leave Group
+                <LogOut className="h-4 w-4" /> {t.groupDetail.leaveGroup}
               </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                <AlertDialogTitle>{t.groupDetail.areYouSure}</AlertDialogTitle>
                 <AlertDialogDescription>
-                  This action cannot be undone. You will lose your rank in this group.
+                  {t.groupDetail.leaveWarning}
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogCancel>{t.groupDetail.cancel}</AlertDialogCancel>
                 <AlertDialogAction onClick={handleLeaveGroup} disabled={leaveGroup.isPending}>
-                  {leaveGroup.isPending ? "Leaving..." : "Leave Group"}
+                  {leaveGroup.isPending ? t.groupDetail.leaving : t.groupDetail.leaveGroup}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
@@ -109,7 +110,7 @@ export default function GroupDetail() {
         <Card className="bg-card border-border overflow-hidden">
           <div className="p-6 border-b border-border bg-muted/50">
             <h2 className="text-2xl font-display font-bold flex items-center gap-3">
-              <Trophy className="h-6 w-6 text-accent" /> Leaderboard
+              <Trophy className="h-6 w-6 text-accent" /> {t.groupDetail.leaderboard}
             </h2>
           </div>
           <div className="divide-y divide-border">
@@ -124,15 +125,12 @@ export default function GroupDetail() {
                   }`}>
                     {index + 1}
                   </div>
-                  <Avatar className="h-10 w-10 border-2 border-background">
-                    <AvatarImage src={member.avatarUrl ?? ""} />
-                    <AvatarFallback>{member.username.substring(0, 2).toUpperCase()}</AvatarFallback>
-                  </Avatar>
+                  <ProdeAvatar avatarUrl={member.avatarUrl} username={member.username} size="md" />
                   <span className="font-semibold text-lg">{member.username}</span>
                 </div>
                 <div className="text-right">
                   <span className="text-2xl font-display font-bold">{member.points}</span>
-                  <span className="text-sm text-muted-foreground ml-1">pts</span>
+                  <span className="text-sm text-muted-foreground ml-1">{t.groupDetail.pts}</span>
                 </div>
               </div>
             ))}

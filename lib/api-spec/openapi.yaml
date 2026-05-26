@@ -68,6 +68,26 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/User"
+    delete:
+      operationId: deleteMe
+      tags: [users]
+      summary: Delete current user account
+      responses:
+        "200":
+          description: Account deleted
+
+  /users/me/stats:
+    get:
+      operationId: getMyStats
+      tags: [users]
+      summary: Get current user statistics
+      responses:
+        "200":
+          description: User statistics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserStats"
 
   # ── Groups ───────────────────────────────────────────────────────────────
   /groups:
@@ -353,7 +373,7 @@ components:
     # ── Users ──
     User:
       type: object
-      required: [id, clerkId, username, email, createdAt]
+      required: [id, clerkId, username, email, createdAt, theme, language, notifMatchReminders, notifGroupActivity, notifLeaderboard, notifAnnouncements]
       properties:
         id:
           type: integer
@@ -365,6 +385,18 @@ components:
           type: string
         avatarUrl:
           type: ["string", "null"]
+        theme:
+          type: string
+        language:
+          type: string
+        notifMatchReminders:
+          type: boolean
+        notifGroupActivity:
+          type: boolean
+        notifLeaderboard:
+          type: boolean
+        notifAnnouncements:
+          type: boolean
         createdAt:
           type: string
 
@@ -375,6 +407,35 @@ components:
           type: string
         avatarUrl:
           type: string
+        theme:
+          type: string
+        language:
+          type: string
+        notifMatchReminders:
+          type: boolean
+        notifGroupActivity:
+          type: boolean
+        notifLeaderboard:
+          type: boolean
+        notifAnnouncements:
+          type: boolean
+
+    UserStats:
+      type: object
+      required: [predictionsCount, correctWinners, exactScores, totalPoints, groupsCount, avgPointsPerPrediction]
+      properties:
+        predictionsCount:
+          type: integer
+        correctWinners:
+          type: integer
+        exactScores:
+          type: integer
+        totalPoints:
+          type: integer
+        groupsCount:
+          type: integer
+        avgPointsPerPrediction:
+          type: number
 
     # ── Groups ──
     Group:
