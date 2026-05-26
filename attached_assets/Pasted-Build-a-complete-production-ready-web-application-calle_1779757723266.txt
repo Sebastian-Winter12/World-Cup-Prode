@@ -1,0 +1,168 @@
+Build a complete, production-ready web application called World Cup Prode 2026.
+
+The goal is to allow family and friends to predict every FIFA World Cup 2026 match and compete in private groups.
+
+Main Requirements
+Authentication
+
+Users can:
+
+Sign up with username, email, and password
+Sign in with username/email and password
+Sign in with Google OAuth
+Edit their profile
+Upload a profile picture
+Groups
+
+Users can:
+
+Create groups
+Join groups through an invite code
+Participate in multiple groups
+Leave groups
+View all joined groups
+
+Each group must have:
+
+Name
+Description
+Creator
+Invite code
+Members list
+Leaderboard
+World Cup Matches
+
+Load all FIFA World Cup 2026 matches automatically from a database seed or public football API.
+
+Store:
+
+Teams
+Country flags
+Match date and time
+Stadium
+Competition stage
+Status (scheduled, live, finished)
+Final score
+Predictions
+
+For every match users can predict:
+
+Home team goals
+Away team goals
+
+Predictions remain editable until:
+
+24 hours before the opening match of the tournament
+
+After that all predictions become locked.
+
+Points System
+
+Calculate points automatically:
+
+Correct winner or draw = 5 points
+Exact home goals = +1 point
+Exact away goals = +1 point
+
+Examples:
+
+Prediction 2-1
+Actual 2-1
+= 7 points
+
+Prediction 3-1
+Actual 2-1
+= 6 points
+
+Prediction 1-0
+Actual 2-0
+= 1 point
+
+Leaderboards
+
+Each group has a live leaderboard showing:
+
+Position
+Username
+Total points
+Correct winner predictions
+Exact score predictions
+
+Automatically update rankings when results are available.
+
+Match Center
+
+Create a page displaying:
+
+All matches
+Team names
+Flags
+Date and time
+Live score
+Match status
+User prediction
+Earned points
+Dashboard
+
+After login show:
+
+Total points
+Ranking in every group
+Upcoming matches
+Prediction progress
+Recent results
+Live Updates
+
+Use polling every 1-5 minutes or real-time updates if supported.
+
+Display:
+
+Live scores
+Finished matches
+Updated leaderboards
+Database
+
+Create all necessary database tables:
+
+Users
+Groups
+GroupMembers
+Matches
+Teams
+Predictions
+Scores
+Leaderboards
+UI
+
+Modern sports design inspired by FIFA and sports betting websites.
+
+Requirements:
+
+Responsive mobile-first layout
+Dark mode
+Team flags
+Modern cards
+Leaderboards
+Statistics pages
+Technology
+
+Use technologies fully supported by Replit:
+
+React
+TypeScript
+Node.js
+Express
+PostgreSQL (Replit Database or Neon)
+TailwindCSS
+Important
+
+Generate:
+
+Complete database schema
+API routes
+Frontend pages
+Authentication flow
+Sample seed data
+Deployment configuration
+
+The application must work immediately inside Replit without requiring external services except Google login and a football results API.
