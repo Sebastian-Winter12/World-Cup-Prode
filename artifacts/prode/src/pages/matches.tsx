@@ -35,12 +35,13 @@ export default function Matches() {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Stages</SelectItem>
-              <SelectItem value="group">Group Stage</SelectItem>
-              <SelectItem value="round_16">Round of 16</SelectItem>
-              <SelectItem value="quarter_final">Quarter-finals</SelectItem>
-              <SelectItem value="semi_final">Semi-finals</SelectItem>
-              <SelectItem value="third_place">Third Place</SelectItem>
-              <SelectItem value="final">Final</SelectItem>
+              <SelectItem value="Group Stage">Group Stage</SelectItem>
+              <SelectItem value="Round of 32">Round of 32</SelectItem>
+              <SelectItem value="Round of 16">Round of 16</SelectItem>
+              <SelectItem value="Quarterfinals">Quarterfinals</SelectItem>
+              <SelectItem value="Semifinals">Semifinals</SelectItem>
+              <SelectItem value="Third Place">Third Place</SelectItem>
+              <SelectItem value="Final">Final</SelectItem>
             </SelectContent>
           </Select>
 

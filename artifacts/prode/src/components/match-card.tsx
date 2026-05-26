@@ -13,7 +13,7 @@ export function MatchCard({ match }: { match: MatchWithPrediction }) {
       <Card className="p-4 hover:border-primary/50 transition-colors cursor-pointer group bg-card">
         <div className="flex justify-between items-center mb-4">
           <span className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">
-            {match.stage} {match.group ? `• Group ${match.group}` : ""}
+            {match.stage} {match.group ? `• ${match.group}` : ""}
           </span>
           {isLive ? (
             <Badge variant="destructive" className="animate-pulse">LIVE</Badge>
