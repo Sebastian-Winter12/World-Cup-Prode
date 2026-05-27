@@ -79,6 +79,30 @@ export const GetMyStatsResponse = zod.object({
 
 
 /**
+ * @summary Get predictions made by a specific user
+ */
+export const GetUserPredictionsParams = zod.object({
+  "userId": zod.coerce.number()
+})
+
+export const GetUserPredictionsResponseItem = zod.object({
+  "matchId": zod.number(),
+  "homeTeam": zod.string(),
+  "awayTeam": zod.string(),
+  "homeFlag": zod.string().nullish(),
+  "awayFlag": zod.string().nullish(),
+  "matchDate": zod.string(),
+  "homeGoals": zod.number(),
+  "awayGoals": zod.number(),
+  "homeScore": zod.number().nullish(),
+  "awayScore": zod.number().nullish(),
+  "matchStatus": zod.string(),
+  "points": zod.number().nullish()
+})
+export const GetUserPredictionsResponse = zod.array(GetUserPredictionsResponseItem)
+
+
+/**
  * @summary List groups the current user belongs to
  */
 export const ListMyGroupsResponseItem = zod.object({
@@ -143,6 +167,9 @@ export const GetGroupResponse = zod.object({
   "username": zod.string(),
   "avatarUrl": zod.string().nullable(),
   "points": zod.number(),
+  "correctWinners": zod.number(),
+  "exactScores": zod.number(),
+  "previousRank": zod.number().nullish(),
   "joinedAt": zod.string()
 }))
 })

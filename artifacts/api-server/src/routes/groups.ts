@@ -150,11 +150,16 @@ router.get("/groups/:groupId", requireAuth, ensureUser, async (req: any, res): P
     memberRows.map(async ({ gm, u }) => {
       const preds = await db.select({ points: predictionsTable.points }).from(predictionsTable).where(eq(predictionsTable.userId, u.id));
       const points = preds.reduce((s, p) => s + (p.points ?? 0), 0);
+      const correctWinners = preds.filter(p => p.points !== null && p.points >= 5).length;
+      const exactScores = preds.filter(p => p.points !== null && p.points === 7).length;
       return {
         userId: u.id,
         username: u.username,
         avatarUrl: u.avatarUrl,
         points,
+        correctWinners,
+        exactScores,
+        previousRank: null,
         joinedAt: gm.joinedAt.toISOString(),
       };
     })

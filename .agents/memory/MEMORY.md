@@ -1,0 +1,5 @@
+- [Date serialization in routes](date-serialization.md) — Drizzle returns Date objects; always call .toISOString() before Zod parse (serializeUser helper in users.ts).
+- [React Query options cast](react-query-options.md) — Generated hooks use UseQueryOptions (requires queryKey in v5); cast query options as `any` to suppress TS error.
+- [Translations circular type](translations-type.md) — Define `en` without type annotation first, then derive `export type Translations = typeof en`; never annotate `en: Translations` (circular).
+- [GroupMember stats from points](groupmember-stats.md) — correctWinners = points >= 5, exactScores = points === 7; computed from DB points field, not separate columns.
+- [Deep import path error](api-client-import.md) — Only `.` is exported from @workspace/api-client-react; use package root import, not /src/generated/api.schemas.

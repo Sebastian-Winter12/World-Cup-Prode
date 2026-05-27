@@ -35,6 +35,7 @@ import type {
   PredictionInput,
   ScoreUpdate,
   User,
+  UserPredictionItem,
   UserStats,
   UserUpdate
 } from './api.schemas';
@@ -411,6 +412,83 @@ export function useGetMyStats<TData = Awaited<ReturnType<typeof getMyStats>>, TE
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getGetMyStatsQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getGetUserPredictionsUrl = (userId: number,) => {
+
+
+
+
+  return `/api/users/${userId}/predictions`
+}
+
+/**
+ * @summary Get predictions made by a specific user
+ */
+export const getUserPredictions = async (userId: number, options?: RequestInit): Promise<UserPredictionItem[]> => {
+
+  return customFetch<UserPredictionItem[]>(getGetUserPredictionsUrl(userId),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetUserPredictionsQueryKey = (userId: number,) => {
+    return [
+    `/api/users/${userId}/predictions`
+    ] as const;
+    }
+
+
+export const getGetUserPredictionsQueryOptions = <TData = Awaited<ReturnType<typeof getUserPredictions>>, TError = ErrorType<void>>(userId: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getUserPredictions>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetUserPredictionsQueryKey(userId);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getUserPredictions>>> = ({ signal }) => getUserPredictions(userId, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(userId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getUserPredictions>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetUserPredictionsQueryResult = NonNullable<Awaited<ReturnType<typeof getUserPredictions>>>
+export type GetUserPredictionsQueryError = ErrorType<void>
+
+
+/**
+ * @summary Get predictions made by a specific user
+ */
+
+export function useGetUserPredictions<TData = Awaited<ReturnType<typeof getUserPredictions>>, TError = ErrorType<void>>(
+ userId: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getUserPredictions>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetUserPredictionsQueryOptions(userId,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

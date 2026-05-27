@@ -12,5 +12,9 @@ export interface GroupMember {
   /** @nullable */
   avatarUrl: string | null;
   points: number;
+  correctWinners: number;
+  exactScores: number;
+  /** @nullable */
+  previousRank?: number | null;
   joinedAt: string;
 }

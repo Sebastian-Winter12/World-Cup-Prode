@@ -84,6 +84,10 @@ export interface GroupMember {
   /** @nullable */
   avatarUrl: string | null;
   points: number;
+  correctWinners: number;
+  exactScores: number;
+  /** @nullable */
+  previousRank?: number | null;
   joinedAt: string;
 }
 
@@ -96,6 +100,26 @@ export interface GroupDetail {
   creatorId: number;
   createdAt: string;
   members: GroupMember[];
+}
+
+export interface UserPredictionItem {
+  matchId: number;
+  homeTeam: string;
+  awayTeam: string;
+  /** @nullable */
+  homeFlag?: string | null;
+  /** @nullable */
+  awayFlag?: string | null;
+  matchDate: string;
+  homeGoals: number;
+  awayGoals: number;
+  /** @nullable */
+  homeScore?: number | null;
+  /** @nullable */
+  awayScore?: number | null;
+  matchStatus: string;
+  /** @nullable */
+  points?: number | null;
 }
 
 export type MatchStatus = typeof MatchStatus[keyof typeof MatchStatus];

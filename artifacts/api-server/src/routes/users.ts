@@ -1,7 +1,7 @@
 import { Router, type IRouter } from "express";
 import { getAuth, clerkClient } from "@clerk/express";
 import { eq } from "drizzle-orm";
-import { db, usersTable, predictionsTable, groupMembersTable } from "@workspace/db";
+import { db, usersTable, predictionsTable, groupMembersTable, matchesTable } from "@workspace/db";
 import { GetMeResponse, UpdateMeBody, UpdateMeResponse } from "@workspace/api-zod";
 
 const router: IRouter = Router();
@@ -106,6 +106,45 @@ router.get("/users/me/stats", requireAuth, ensureUser, async (req: any, res): Pr
     predictionsCount > 0 ? Math.round((totalPoints / predictionsCount) * 10) / 10 : 0;
 
   res.json({ predictionsCount, correctWinners, exactScores, totalPoints, groupsCount, avgPointsPerPrediction });
+});
+
+router.get("/users/:userId/predictions", requireAuth, async (req: any, res): Promise<void> => {
+  const userId = parseInt(req.params.userId, 10);
+  if (!userId || isNaN(userId)) {
+    res.status(400).json({ error: "Invalid user ID" });
+    return;
+  }
+
+  const [user] = await db.select({ id: usersTable.id }).from(usersTable).where(eq(usersTable.id, userId));
+  if (!user) {
+    res.status(404).json({ error: "User not found" });
+    return;
+  }
+
+  const rows = await db
+    .select({
+      matchId: matchesTable.id,
+      homeTeam: matchesTable.homeTeam,
+      awayTeam: matchesTable.awayTeam,
+      homeFlag: matchesTable.homeFlag,
+      awayFlag: matchesTable.awayFlag,
+      matchDate: matchesTable.matchDate,
+      homeScore: matchesTable.homeScore,
+      awayScore: matchesTable.awayScore,
+      matchStatus: matchesTable.status,
+      homeGoals: predictionsTable.homeGoals,
+      awayGoals: predictionsTable.awayGoals,
+      points: predictionsTable.points,
+    })
+    .from(predictionsTable)
+    .innerJoin(matchesTable, eq(matchesTable.id, predictionsTable.matchId))
+    .where(eq(predictionsTable.userId, userId))
+    .orderBy(matchesTable.matchDate);
+
+  res.json(rows.map(r => ({
+    ...r,
+    matchDate: r.matchDate instanceof Date ? r.matchDate.toISOString() : r.matchDate,
+  })));
 });
 
 router.delete("/users/me", requireAuth, ensureUser, async (req: any, res): Promise<void> => {

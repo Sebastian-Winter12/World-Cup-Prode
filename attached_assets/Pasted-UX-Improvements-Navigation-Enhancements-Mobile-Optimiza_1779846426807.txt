@@ -1,0 +1,221 @@
+UX Improvements, Navigation Enhancements & Mobile Optimization
+
+Please improve the overall user experience, navigation, leaderboard functionality, and mobile responsiveness across the entire application while maintaining the current FIFA-inspired sports design.
+
+1. Global Back Navigation
+
+Currently, users must use the main menu or browser navigation to return to previous pages.
+
+Requirements
+
+Add a visible back button in the top-left corner of:
+
+Match prediction pages
+Group pages
+User profile page
+Settings page
+Leaderboard detail pages
+Any detail page opened from a list
+
+Behavior:
+
+Return the user to the previous page.
+Support browser back navigation.
+Mobile: compact arrow icon.
+Desktop: arrow icon + "Back" label.
+Keep placement and styling consistent across the application.
+2. Enhanced Group Leaderboards
+
+Improve the leaderboard shown inside every group.
+
+For each member display:
+Position
+Username
+Total points
+Correct winner predictions count
+Exact score predictions count
+
+Example:
+
+Sebastian - 85 pts - 14 winners - 5 exact scores
+Martin - 81 pts - 13 winners - 4 exact scores
+Logged-in User Highlight
+
+The currently authenticated user should always be visually highlighted using:
+
+Different background color
+Border accent
+"You" badge
+
+Users should instantly recognize their own position.
+
+3. Ranking Movement Indicators
+
+Show leaderboard movement compared to the previous ranking update.
+
+Examples:
+
+▲ +2 positions
+▼ -1 position
+= no change
+
+Display the indicator next to the ranking position.
+
+This should automatically update whenever standings change.
+
+4. User Prediction Preview
+
+When clicking a member in a group leaderboard:
+
+Open a modal, drawer, or popup
+
+Display all predictions made by that user.
+
+For every prediction show:
+
+Match
+Predicted score
+Actual score (if available)
+Points earned
+Prediction status
+
+Statuses:
+
+Pending
+Correct Winner
+Exact Score
+Incorrect
+Requirements
+Scrollable list
+Mobile friendly
+Read-only
+Users can inspect other users' predictions
+No editing permissions
+5. Mobile Dashboard Optimization
+
+The current dashboard uses excessive vertical space.
+
+Current Issue
+
+Statistic cards are stacked vertically and occupy too much screen height.
+
+New Responsive Grid
+Mobile
+
+2 columns per row
+
+Tablet
+
+3 columns per row
+
+Desktop
+
+4 columns per row
+
+Example cards:
+
+Total Points
+Predictions Made
+Correct Winners
+Exact Scores
+Current Rank
+Groups Joined
+Tournament Accuracy
+Average Points Per Match
+
+Cards should be compact and information-dense while remaining readable.
+
+6. Groups Section Redesign
+
+Keep group cards larger than statistic cards because they contain more information.
+
+Display
+Group name
+Member count
+User ranking
+Total points
+Quick access button
+Last activity
+Layout
+Full-width horizontal cards
+Responsive on mobile
+Clear hierarchy
+Fast access to group details
+7. General Mobile Improvements
+
+Improve usability throughout the application.
+
+Requirements
+Reduce excessive padding and margins
+Use more compact card heights
+Keep important content visible above the fold
+Optimize spacing for smaller screens
+Improve touch targets
+Reduce unnecessary scrolling
+Maintain readability
+Tables
+
+Convert all tables into responsive mobile cards when screen width is small.
+
+Examples:
+
+Leaderboards
+Predictions
+Group members
+Match results
+8. Smooth Navigation & Animations
+
+Add subtle and professional transitions:
+
+Page transitions
+Modal opening animations
+Leaderboard updates
+Theme switching
+Loading states
+
+Animations should be smooth and lightweight.
+
+9. Match Prediction Navigation
+
+When a user saves a prediction:
+
+Display:
+
+Success confirmation
+Next match shortcut button
+Previous match shortcut button
+
+Allow users to move through fixtures quickly without returning to the main match list every time.
+
+10. Consistent Mobile Header
+
+Create a reusable page header component containing:
+
+Back button
+Page title
+Optional action button
+
+Use the same component across:
+
+Profile
+Settings
+Groups
+Matches
+Leaderboards
+Prediction pages
+
+This should provide a consistent navigation experience throughout the application.
+
+Design Requirements
+
+Maintain the existing FIFA-style visual identity:
+
+Modern sports aesthetic
+Team flags
+Dark mode and light mode support
+Responsive layout
+Fast performance
+Clean typography
+Consistent spacing system
+
+All improvements must be fully functional and connected to real application data, not placeholders or mockups.

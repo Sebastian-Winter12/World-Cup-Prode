@@ -89,6 +89,29 @@ paths:
               schema:
                 $ref: "#/components/schemas/UserStats"
 
+  /users/{userId}/predictions:
+    get:
+      operationId: getUserPredictions
+      tags: [users]
+      summary: Get predictions made by a specific user
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: User predictions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UserPredictionItem"
+        "404":
+          description: User not found
+
   # ── Groups ───────────────────────────────────────────────────────────────
   /groups:
     get:
@@ -518,7 +541,7 @@ components:
 
     GroupMember:
       type: object
-      required: [userId, username, avatarUrl, points, joinedAt]
+      required: [userId, username, avatarUrl, points, correctWinners, exactScores, joinedAt]
       properties:
         userId:
           type: integer
@@ -528,8 +551,43 @@ components:
           type: ["string", "null"]
         points:
           type: integer
+        correctWinners:
+          type: integer
+        exactScores:
+          type: integer
+        previousRank:
+          type: ["integer", "null"]
         joinedAt:
           type: string
+
+    UserPredictionItem:
+      type: object
+      required: [matchId, homeTeam, awayTeam, matchDate, homeGoals, awayGoals, matchStatus]
+      properties:
+        matchId:
+          type: integer
+        homeTeam:
+          type: string
+        awayTeam:
+          type: string
+        homeFlag:
+          type: ["string", "null"]
+        awayFlag:
+          type: ["string", "null"]
+        matchDate:
+          type: string
+        homeGoals:
+          type: integer
+        awayGoals:
+          type: integer
+        homeScore:
+          type: ["integer", "null"]
+        awayScore:
+          type: ["integer", "null"]
+        matchStatus:
+          type: string
+        points:
+          type: ["integer", "null"]
 
     # ── Matches ──
     Match:
