@@ -5,12 +5,14 @@ interface I18nContextValue {
   lang: Language;
   setLang: (lang: Language) => void;
   t: Translations;
+  teamName: (name: string) => string;
 }
 
 const I18nContext = createContext<I18nContextValue>({
-  lang: "en",
+  lang: "es",
   setLang: () => {},
   t: translations.en,
+  teamName: (name) => name,
 });
 
 function getInitialLang(): Language {
@@ -18,7 +20,7 @@ function getInitialLang(): Language {
     const stored = localStorage.getItem("prode-lang");
     if (stored === "en" || stored === "es") return stored;
   } catch {}
-  return "en";
+  return "es";
 }
 
 export function I18nProvider({ children }: { children: ReactNode }) {
@@ -33,11 +35,16 @@ export function I18nProvider({ children }: { children: ReactNode }) {
 
   const t = translations[lang];
 
-  return (
-    <I18nContext.Provider value={{ lang, setLang, t }}>
-      {children}
-    </I18nContext.Provider>
-  );
+  const teamName = useCallback((name: string): string => {
+  const teams = translations[lang].teams as Record<string, string>;
+  return teams[name] ?? name;
+}, [lang]);
+
+return (
+  <I18nContext.Provider value={{ lang, setLang, t, teamName }}>
+    {children}
+  </I18nContext.Provider>
+);
 }
 
 export function useI18n() {

@@ -72,7 +72,7 @@ export function Layout({ children }: LayoutProps) {
     <div className="min-h-screen bg-background flex flex-col md:flex-row">
       <header className="md:hidden flex items-center justify-between p-4 border-b bg-card sticky top-0 z-50">
         <div className="flex items-center gap-2">
-          <Trophy className="h-6 w-6 text-primary" />
+          <Trophy className="h-6 w-6 text-[#007004]" />
           <span className="font-display font-bold text-lg tracking-tight">PRODE 26</span>
         </div>
         <Sheet>
@@ -83,7 +83,7 @@ export function Layout({ children }: LayoutProps) {
           </SheetTrigger>
           <SheetContent side="left" className="w-[280px] sm:w-[320px] p-6 flex flex-col gap-2">
             <div className="flex items-center gap-2 mb-8 px-4">
-              <Trophy className="h-8 w-8 text-primary" />
+              <Trophy className="h-8 w-8 text-[#007004]" />
               <span className="font-display font-bold text-2xl tracking-tight">PRODE 26</span>
             </div>
             <NavLinks />
@@ -93,7 +93,7 @@ export function Layout({ children }: LayoutProps) {
 
       <aside className="hidden md:flex flex-col w-64 border-r bg-card min-h-screen sticky top-0">
         <div className="p-6 flex items-center gap-3 mb-6">
-          <Trophy className="h-8 w-8 text-primary" />
+          <Trophy className="h-8 w-8 text-[#007004]" />
           <span className="font-display font-bold text-2xl tracking-tight text-foreground">PRODE 26</span>
         </div>
         <nav className="flex-1 px-4 space-y-2 flex flex-col">

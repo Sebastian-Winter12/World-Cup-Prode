@@ -3,11 +3,12 @@ import { format } from "date-fns";
 import { Link } from "wouter";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useI18n } from "@/i18n/context";
 
 export function MatchCard({ match }: { match: MatchWithPrediction }) {
+  const { teamName } = useI18n();
   const isFinished = match.status === "finished";
   const isLive = match.status === "live";
-
   return (
     <Link href={`/matches/${match.id}`}>
       <Card className="p-4 hover:border-primary/50 transition-colors cursor-pointer group bg-card">
@@ -25,7 +26,6 @@ export function MatchCard({ match }: { match: MatchWithPrediction }) {
             </span>
           )}
         </div>
-
         <div className="flex flex-col gap-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -36,13 +36,12 @@ export function MatchCard({ match }: { match: MatchWithPrediction }) {
                   <span className="text-xs font-bold">{match.homeTeam.substring(0, 3).toUpperCase()}</span>
                 )}
               </div>
-              <span className="font-semibold text-lg">{match.homeTeam}</span>
+              <span className="font-semibold text-lg">{teamName(match.homeTeam)}</span>
             </div>
             <span className="font-display font-bold text-2xl">
               {match.homeScore ?? "-"}
             </span>
           </div>
-
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-full bg-muted overflow-hidden flex items-center justify-center border">
@@ -52,14 +51,13 @@ export function MatchCard({ match }: { match: MatchWithPrediction }) {
                   <span className="text-xs font-bold">{match.awayTeam.substring(0, 3).toUpperCase()}</span>
                 )}
               </div>
-              <span className="font-semibold text-lg">{match.awayTeam}</span>
+              <span className="font-semibold text-lg">{teamName(match.awayTeam)}</span>
             </div>
             <span className="font-display font-bold text-2xl">
               {match.awayScore ?? "-"}
             </span>
           </div>
         </div>
-
         {match.myPrediction && (
           <div className="mt-4 pt-4 border-t border-border flex justify-between items-center text-sm">
             <span className="text-muted-foreground">Your prediction:</span>

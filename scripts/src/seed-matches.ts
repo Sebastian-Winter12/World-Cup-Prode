@@ -6,7 +6,7 @@
  */
 
 import { db } from "@workspace/db";
-import { matches } from "@workspace/db/schema";
+import { matchesTable as matches } from "@workspace/db/schema";
 
 // ISO 3166-1 alpha-2 codes for flag CDN
 const flag = (code: string) => `https://flagcdn.com/w40/${code}.png`;
@@ -258,7 +258,7 @@ async function main() {
   console.log(`Seeding ${fixtures.length} official FIFA World Cup 2026 matches...`);
 
   await db.delete(matches);
-  await db.insert(matches).values(fixtures);
+  await db.insert(matches).values(fixtures.map(f => ({ ...f, matchDate: new Date(f.matchDate) })));
 
   console.log(`Done. Inserted ${fixtures.length} matches.`);
   process.exit(0);

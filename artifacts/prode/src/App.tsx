@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { ClerkProvider, SignIn, SignUp, Show, useClerk } from "@clerk/react";
+import { ClerkProvider, SignIn, SignUp, Show, useClerk, useAuth } from "@clerk/react";
 import { publishableKeyFromHost } from "@clerk/react/internal";
 import { shadcn } from "@clerk/themes";
 import { Switch, Route, useLocation, Router as WouterRouter, Redirect, Link } from "wouter";
@@ -16,6 +16,7 @@ import MatchDetail from "@/pages/match-detail";
 import Groups from "@/pages/groups";
 import GroupDetail from "@/pages/group-detail";
 import Profile from "@/pages/profile";
+import { setAuthTokenGetter } from "@workspace/api-client-react";
 
 const queryClient = new QueryClient();
 
@@ -126,6 +127,7 @@ function ClerkQueryClientCacheInvalidator() {
   const { addListener } = useClerk();
   const queryClient = useQueryClient();
   const prevUserIdRef = useRef<string | null | undefined>(undefined);
+  
 
   useEffect(() => {
     const unsubscribe = addListener(({ user }) => {
@@ -141,6 +143,15 @@ function ClerkQueryClientCacheInvalidator() {
     return unsubscribe;
   }, [addListener, queryClient]);
 
+  return null;
+}
+
+function ApiAuthSync() {
+  const { getToken } = useAuth();
+  useEffect(() => {
+    setAuthTokenGetter(() => getToken());
+    return () => setAuthTokenGetter(null);
+  }, [getToken]);
   return null;
 }
 
@@ -172,6 +183,7 @@ function ClerkProviderWithRoutes() {
     >
       <QueryClientProvider client={queryClient}>
         <ClerkQueryClientCacheInvalidator />
+        <ApiAuthSync />
         <TooltipProvider>
           <Switch>
             <Route path="/" component={HomeRedirect} />

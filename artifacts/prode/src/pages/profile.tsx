@@ -341,8 +341,8 @@ export default function Profile() {
               <label className="text-sm font-medium block mb-3">{t.profile.language}</label>
               <div className="flex gap-2">
                 {([
-                  { value: "en" as Language, label: t.profile.languageEn },
                   { value: "es" as Language, label: t.profile.languageEs },
+                  { value: "en" as Language, label: t.profile.languageEn },
                 ]).map(opt => (
                   <button
                     key={opt.value}

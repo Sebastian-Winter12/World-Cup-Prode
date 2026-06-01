@@ -26,7 +26,7 @@ export default function MatchDetail() {
   const { matchId } = useParams();
   const id = parseInt(matchId || "0", 10);
   const { toast } = useToast();
-  const { t } = useI18n();
+  const { t, teamName } = useI18n();
   const [, setLocation] = useLocation();
   const queryClient = useQueryClient();
 
@@ -50,13 +50,11 @@ export default function MatchDetail() {
   });
 
   useEffect(() => {
-    if (match?.myPrediction) {
-      form.reset({
-        homeGoals: match.myPrediction.homeGoals ?? 0,
-        awayGoals: match.myPrediction.awayGoals ?? 0,
-      });
-    }
-  }, [match, form]);
+    form.reset({
+      homeGoals: match?.myPrediction?.homeGoals ?? 0,
+      awayGoals: match?.myPrediction?.awayGoals ?? 0,
+    });
+  }, [match?.id]);
 
   const onSubmit = (values: z.infer<typeof predictionSchema>) => {
     upsertPrediction.mutate({ matchId: id, data: values }, {
@@ -90,7 +88,7 @@ export default function MatchDetail() {
     <Layout>
       <div className="p-4 md:p-8 max-w-4xl mx-auto w-full space-y-6">
         <PageHeader
-          title={`${match.homeTeam} vs ${match.awayTeam}`}
+          title={`${teamName(match.homeTeam)} vs ${teamName(match.awayTeam)}`}
           backHref="/matches"
         />
 
@@ -118,7 +116,7 @@ export default function MatchDetail() {
                   <span className="text-lg font-bold">{match.homeTeam.substring(0, 3).toUpperCase()}</span>
                 )}
               </div>
-              <h2 className="text-lg md:text-2xl font-display font-bold text-center leading-tight">{match.homeTeam}</h2>
+                <h2 className="text-lg md:text-2xl font-display font-bold text-center leading-tight">{teamName(match.homeTeam)}</h2>
             </div>
 
             <div className="flex flex-col items-center gap-2 px-2 md:px-8 shrink-0">
@@ -143,7 +141,7 @@ export default function MatchDetail() {
                   <span className="text-lg font-bold">{match.awayTeam.substring(0, 3).toUpperCase()}</span>
                 )}
               </div>
-              <h2 className="text-lg md:text-2xl font-display font-bold text-center leading-tight">{match.awayTeam}</h2>
+              <h2 className="text-lg md:text-2xl font-display font-bold text-center leading-tight">{teamName(match.awayTeam)}</h2>
             </div>
           </div>
         </Card>
@@ -227,11 +225,10 @@ export default function MatchDetail() {
               variant="outline"
               size="sm"
               onClick={() => setLocation(`/matches/${prevMatch.id}`)}
-              className="gap-1.5 flex-1 sm:flex-none"
+              className="gap-1.5 flex-1 sm:flex-none bg-card border-border hover:bg-black"
             >
               <ChevronLeft className="h-4 w-4" />
               <span className="hidden xs:inline">{t.matchDetail.prevMatch}</span>
-              <span className="xs:hidden">←</span>
             </Button>
           ) : (
             <div />
@@ -241,14 +238,13 @@ export default function MatchDetail() {
               variant="outline"
               size="sm"
               onClick={() => setLocation(`/matches/${nextMatch.id}`)}
-              className="gap-1.5 flex-1 sm:flex-none"
+              className="gap-1.5 flex-1 sm:flex-none bg-card border-border hover:bg-black"
             >
               <span className="hidden xs:inline">{t.matchDetail.nextMatch}</span>
-              <span className="xs:hidden">→</span>
               <ChevronRight className="h-4 w-4" />
             </Button>
           )}
-        </div>
+</div>
       </div>
     </Layout>
   );
