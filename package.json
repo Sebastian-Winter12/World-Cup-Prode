@@ -12,9 +12,7 @@
     "prettier": "^3.8.3",
     "typescript": "~5.9.3"
   },
-  "pnpm": {
-    "overrides": {
-      "@rollup/rollup-win32-x64-msvc": "4.60.4"
-    }
+  "resolutions": {
+    "@rollup/rollup-win32-x64-msvc": "4.60.4"
   }
 }
