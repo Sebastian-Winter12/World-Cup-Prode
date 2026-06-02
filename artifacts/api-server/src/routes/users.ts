@@ -28,18 +28,21 @@ export const ensureUser = async (req: any, res: any, next: any) => {
 
   let [user] = await db.select().from(usersTable).where(eq(usersTable.clerkId, clerkId));
   if (!user) {
-    const sessionClaims = auth?.sessionClaims as any;
-    const email = sessionClaims?.email || `${clerkId}@placeholder.com`;
-    const firstName = sessionClaims?.firstName || "";
-    const lastName = sessionClaims?.lastName || "";
-    const rawUsername = sessionClaims?.username || `${firstName}${lastName}` || `user_${clerkId.slice(-8)}`;
+    // Pedimos el perfil completo a Clerk usando su ID
+    const clerkUser = await clerkClient.users.getUser(clerkId);
+    
+    // Ahora sacamos el mail real desde el arreglo de emails de Clerk
+    const email = clerkUser.emailAddresses[0]?.emailAddress || `${clerkId}@placeholder.com`;
+    const firstName = clerkUser.firstName || "";
+    const lastName = clerkUser.lastName || "";
+    const rawUsername = clerkUser.username || `${firstName}${lastName}` || `user_${clerkId.slice(-8)}`;
     const username = rawUsername.replace(/\s+/g, "_").toLowerCase() || `user_${clerkId.slice(-8)}`;
 
     [user] = await db.insert(usersTable).values({
       clerkId,
       username: `${username}_${Math.random().toString(36).slice(-4)}`,
       email,
-      avatarUrl: sessionClaims?.imageUrl || null,
+      avatarUrl: clerkUser.imageUrl || null,
     }).returning();
   }
   req.dbUser = user;
