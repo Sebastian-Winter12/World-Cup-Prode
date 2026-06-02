@@ -1,0 +1,7 @@
+* [33m08b6483[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m Ignore env files and remove secrets
+* [33m5e54cd9[m Update project, now everything works in local, still in work the live matches
+* [33mf72619a[m[33m ([m[1;31morigin/main[m[33m)[m Enhance group leaderboards and user prediction previews
+* [33m7c57791[m Add user profile settings and internationalization support
+* [33m0008c91[m Update matches page with official World Cup fixtures and fix display issues
+* [33mc053949[m Add full backend and frontend for World Cup Prode 2026 prediction app
+* [33m1de22a6[m Initial commit

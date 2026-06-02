@@ -42,13 +42,15 @@ export default function Dashboard() {
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-          <Card className="p-4 bg-card border-border flex flex-col gap-2">
-            <div className="flex justify-between items-center">
-              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider leading-tight">{t.dashboard.totalPoints}</p>
-              <Trophy className="h-4 w-4 text-accent shrink-0" />
-            </div>
-            <p className="text-3xl font-display font-bold leading-none">{dashboard.totalPoints}</p>
-          </Card>
+          <Link href="/groups">
+            <Card className="p-4 bg-card border-border flex flex-col gap-2 cursor-pointer hover:border-primary/40 transition-colors">
+              <div className="flex justify-between items-center">
+                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider leading-tight">{t.dashboard.totalPoints}</p>
+                <Trophy className="h-4 w-4 text-accent shrink-0" />
+              </div>
+              <p className="text-3xl font-display font-bold leading-none">{dashboard.totalPoints}</p>
+            </Card>
+          </Link>
           <Card className="p-4 bg-card border-border flex flex-col gap-2">
             <div className="flex justify-between items-center">
               <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider leading-tight">{t.dashboard.exactScores}</p>
@@ -63,16 +65,22 @@ export default function Dashboard() {
             </div>
             <p className="text-3xl font-display font-bold leading-none">{dashboard.correctWinners}</p>
           </Card>
-          <Card className="p-4 bg-card border-border flex flex-col gap-2">
-            <div className="flex justify-between items-center">
-              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider leading-tight">{t.dashboard.predicted}</p>
-              <Activity className="h-4 w-4 text-purple-500 shrink-0" />
-            </div>
-            <p className="text-3xl font-display font-bold leading-none">
-              {dashboard.predictedCount}
-              <span className="text-base text-muted-foreground font-sans ml-1">/ {dashboard.totalMatches}</span>
-            </p>
-          </Card>
+          <Link href="/matches">
+            <Card className="p-4 bg-card border-border flex flex-col gap-2 cursor-pointer hover:border-primary/40 transition-colors">
+              <div className="flex justify-between items-center">
+                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider leading-tight">
+                  {t.dashboard.predicted}
+                </p>
+                <Activity className="h-4 w-4 text-purple-500 shrink-0" />
+              </div>
+              <p className="text-3xl font-display font-bold leading-none">
+                {dashboard.predictedCount}
+                <span className="text-base text-muted-foreground font-sans ml-1">
+                  / {dashboard.totalMatches}
+                </span>
+              </p>
+            </Card>
+          </Link>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
