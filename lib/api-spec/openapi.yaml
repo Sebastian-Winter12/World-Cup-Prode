@@ -734,7 +734,7 @@ components:
     # ── Dashboard ──
     Dashboard:
       type: object
-      required: [totalPoints, predictionsCount, correctWinners, exactScores, groupRankings, upcomingMatches, recentResults, predictedCount, totalMatches]
+      required: [totalPoints, predictionsCount, correctWinners, exactScores, groupRankings, upcomingMatches, recentResults, predictedCount, totalMatches, liveMatches]
       properties:
         totalPoints:
           type: integer
@@ -757,6 +757,10 @@ components:
           items:
             $ref: "#/components/schemas/MatchWithPrediction"
         recentResults:
+          type: array
+          items:
+            $ref: "#/components/schemas/MatchWithPrediction"
+        liveMatches:
           type: array
           items:
             $ref: "#/components/schemas/MatchWithPrediction"

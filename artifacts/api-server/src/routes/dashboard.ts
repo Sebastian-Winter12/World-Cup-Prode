@@ -92,6 +92,14 @@ router.get("/dashboard", requireAuth, ensureUser, async (req: any, res): Promise
 
   const recentResults = await Promise.all(recentRaw.slice(-5).reverse().map(addPrediction));
 
+  // Live matches
+  const liveRaw = await db
+    .select()
+    .from(matchesTable)
+    .where(eq(matchesTable.status, "live"));
+
+  const liveMatches = await Promise.all(liveRaw.map(addPrediction));
+
   res.json({
     totalPoints,
     predictionsCount: predictedCount,
@@ -102,6 +110,8 @@ router.get("/dashboard", requireAuth, ensureUser, async (req: any, res): Promise
     groupRankings: groupRankings.filter(Boolean),
     upcomingMatches,
     recentResults,
+    liveMatches,
+    liveRaw
   });
 });
 

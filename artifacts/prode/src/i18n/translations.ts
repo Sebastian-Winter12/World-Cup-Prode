@@ -20,6 +20,8 @@ export const en = {
     yourGroups: "Your Groups",
     members: "members",
     noGroups: "You haven't joined any groups yet.",
+    liveMatches: "Live Matches,",
+    noLiveMatches: "No live matches at the moment.",
   },
   matches: {
     title: "Match Center",
@@ -256,6 +258,8 @@ export const es: Translations = {
     yourGroups: "Tus Grupos",
     members: "miembros",
     noGroups: "Aún no te has unido a ningún grupo.",
+    liveMatches: "Partidos en Vivo",
+    noLiveMatches: "No hay partidos en vivo en este momento.",
   },
   matches: {
     title: "Centro de Partidos",
@@ -294,7 +298,7 @@ export const es: Translations = {
   },
   groups: {
     title: "Mis Grupos",
-    subtitle: "Competí con amigos, familia y colegas.",
+    subtitle: "Competí con amigos y familia.",
     createGroup: "Crear Grupo",
     joinViaCode: "Unirse con Código",
     joinGroup: "Unirse a un Grupo",

@@ -1,22 +1,23 @@
 import { defineConfig, InputTransformerFn } from "orval";
 import path from "path";
+import fs from "fs";
 
 const root = path.resolve(__dirname, "..", "..");
 const apiClientReactSrc = path.resolve(root, "lib", "api-client-react", "src");
 const apiZodSrc = path.resolve(root, "lib", "api-zod", "src");
 
-// Our exports make assumptions about the title of the API being "Api" (i.e. generated output is `api.ts`).
+const openApiTarget = path.resolve(__dirname, "openapi.yaml");
+
 const titleTransformer: InputTransformerFn = (config) => {
   config.info ??= {};
   config.info.title = "Api";
-
   return config;
 };
 
 export default defineConfig({
   "api-client-react": {
     input: {
-      target: "./openapi.yaml",
+      target: openApiTarget, 
       override: {
         transformer: titleTransformer,
       },
@@ -28,7 +29,6 @@ export default defineConfig({
       mode: "split",
       baseUrl: "/api",
       clean: true,
-      prettier: true,
       override: {
         fetch: {
           includeHttpResponseReturnType: false,
@@ -39,10 +39,13 @@ export default defineConfig({
         },
       },
     },
+    hooks: {
+      afterAllFilesWrite: "prettier --write",
+    },
   },
   zod: {
     input: {
-      target: "./openapi.yaml",
+      target: openApiTarget, 
       override: {
         transformer: titleTransformer,
       },
@@ -54,7 +57,6 @@ export default defineConfig({
       schemas: { path: "generated/types", type: "typescript" },
       mode: "split",
       clean: true,
-      prettier: true,
       override: {
         zod: {
           coerce: {
@@ -67,6 +69,9 @@ export default defineConfig({
         useDates: true,
         useBigInt: true,
       },
+    },
+    hooks: {
+      afterAllFilesWrite: "prettier --write",
     },
   },
 });
