@@ -27,7 +27,7 @@ jobs:
           # Configuramos pnpm para que ignore el lockfile permanentemente en esta sesión
           pnpm config set frozen-lockfile false
           # Instalamos dependencias forzando la regeneración del lockfile
-          pnpm install --force --no-frozen-lockfile
+          pnpm install --frozen-lockfile
 
       - name: Ejecutar script de actualización
         env:
