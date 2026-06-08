@@ -12,19 +12,22 @@ jobs:
       - name: Checkout del código
         uses: actions/checkout@v4
 
+      - name: Configurar pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.4.0
+
       - name: Configurar Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '24'
+          cache: 'pnpm'
 
-      - name: Limpiar y preparar entorno
-        shell: bash
-        run: |
-          npm install -g pnpm@11.4.0
-          pnpm install --no-frozen-lockfile
+      - name: Instalar dependencias
+        run: pnpm install --no-frozen-lockfile
 
       - name: Ejecutar script de actualización
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          API_TOKEN: ${{ secrets.API_TOKEN }}
+          FOOTBALL_DATA_TOKEN: ${{ secrets.FOOTBALL_DATA_TOKEN }}
         run: pnpm --filter @workspace/scripts run update-matches
