@@ -2,27 +2,29 @@ name: Sincronizar Partidos
 
 on:
   schedule:
-    - cron: '*/5 * * * *'
+    - cron: '*/10 * * * *'
   workflow_dispatch:
 
 jobs:
   update-matches:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout del código
         uses: actions/checkout@v4
 
-      - name: Instalar Node.js
+      - name: Configurar Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '24'
 
-      - name: Instalar pnpm manualmente
-        run: npm install -g pnpm@9
-
-      - name: Instalar dependencias
-        # Usamos --force para ignorar cualquier conflicto y --no-frozen-lockfile
-        run: pnpm install --force --no-frozen-lockfile
+      - name: Instalar pnpm y dependencias
+        shell: bash
+        # Esto ignora cualquier configuración de pnpm previa y crea el entorno desde cero
+        run: |
+          npm install -g pnpm@9
+          pnpm config set auto-install-peers true
+          pnpm install --force
+          pnpm run build
 
       - name: Ejecutar script de actualización
         env:
