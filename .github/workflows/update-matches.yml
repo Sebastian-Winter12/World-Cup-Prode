@@ -17,14 +17,17 @@ jobs:
         with:
           node-version: '24'
 
-      - name: Instalar pnpm y dependencias
+      - name: Limpiar y preparar entorno
         shell: bash
-        # Esto ignora cualquier configuración de pnpm previa y crea el entorno desde cero
         run: |
-          npm install -g pnpm@11
-          pnpm config set auto-install-peers true
-          pnpm install --force
-          pnpm run build
+          # Borramos cualquier configuración residual de pnpm
+          rm -rf .npmrc || true
+          # Instalamos la versión específica de pnpm que usas localmente
+          npm install -g pnpm@11.4.0
+          # Configuramos pnpm para que ignore el lockfile permanentemente en esta sesión
+          pnpm config set frozen-lockfile false
+          # Instalamos dependencias forzando la regeneración del lockfile
+          pnpm install --force --no-frozen-lockfile
 
       - name: Ejecutar script de actualización
         env:
