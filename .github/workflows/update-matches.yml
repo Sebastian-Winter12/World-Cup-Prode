@@ -12,7 +12,7 @@ jobs:
       - name: Checkout del código
         uses: actions/checkout@v4
 
-      - name: Configurar pnpm
+      - name: Instalar pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 11.4.0
@@ -21,13 +21,19 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '24'
-          cache: 'pnpm'
-
+          # Quitamos cache: 'pnpm' porque requiere el lockfile
+          
       - name: Instalar dependencias
-        run: pnpm install --no-frozen-lockfile
+        shell: bash
+        run: |
+          # Borramos .npmrc temporalmente si existe
+          if [ -f .npmrc ]; then mv .npmrc .npmrc.bak; fi
+          pnpm install --no-frozen-lockfile
+          # Restauramos el .npmrc después de la instalación
+          if [ -f .npmrc.bak ]; then mv .npmrc.bak .npmrc; fi
 
       - name: Ejecutar script de actualización
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          FOOTBALL_DATA_TOKEN: ${{ secrets.FOOTBALL_DATA_TOKEN }}
+          API_TOKEN: ${{ secrets.API_TOKEN }} # Asegúrate de que este nombre sea igual al que pusiste en los Secrets
         run: pnpm --filter @workspace/scripts run update-matches
