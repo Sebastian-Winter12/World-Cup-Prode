@@ -21,7 +21,7 @@ jobs:
         shell: bash
         # Esto ignora cualquier configuración de pnpm previa y crea el entorno desde cero
         run: |
-          npm install -g pnpm@9
+          npm install -g pnpm@11
           pnpm config set auto-install-peers true
           pnpm install --force
           pnpm run build
