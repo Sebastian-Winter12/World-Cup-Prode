@@ -98,25 +98,25 @@ export default function Dashboard() {
               </section>
             )}
 
-                <section>
-                <h2 className="text-lg md:text-xl font-display font-bold mb-3 md:mb-4 flex items-center gap-2">
-                  <span className="inline-block h-2 w-2 rounded-full bg-red-500 animate-pulse" />
-                  {t.dashboard.liveMatches}
-                </h2>
-                
-                {dashboard.liveMatches?.length > 0 ? (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
-                    {dashboard.liveMatches.map(match => (
-                      <MatchCard key={match.id} match={match} />
-                    ))}
-                  </div>
-                ) : (
-                  <Card className="p-5 text-center text-muted-foreground border-dashed text-sm">
-                    <p>{t.dashboard.noLiveMatches}</p>
-                  </Card>
-                )}
-              </section>
-              
+            <section>
+              <h2 className="text-lg md:text-xl font-display font-bold mb-3 md:mb-4 flex items-center gap-2">
+                <span className="inline-block h-2 w-2 rounded-full bg-red-500 animate-pulse" />
+                {t.dashboard.liveMatches}
+              </h2>
+
+              {dashboard.liveMatches?.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
+                  {dashboard.liveMatches.map(match => (
+                    <MatchCard key={match.id} match={match} />
+                  ))}
+                </div>
+              ) : (
+                <Card className="p-5 text-center text-muted-foreground border-dashed text-sm">
+                  <p>{t.dashboard.noLiveMatches}</p>
+                </Card>
+              )}
+            </section>
+
             {dashboard.recentResults.length > 0 && (
               <section>
                 <h2 className="text-lg md:text-xl font-display font-bold mb-3 md:mb-4">

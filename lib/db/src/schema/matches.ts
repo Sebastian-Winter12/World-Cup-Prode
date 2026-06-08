@@ -4,6 +4,7 @@ import { z } from "zod/v4";
 
 export const matchesTable = pgTable("matches", {
   id: serial("id").primaryKey(),
+  apiId: integer("api_id"),
   homeTeam: text("home_team").notNull(),
   awayTeam: text("away_team").notNull(),
   homeFlag: text("home_flag"),
