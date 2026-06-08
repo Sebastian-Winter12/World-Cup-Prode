@@ -19,12 +19,10 @@ jobs:
 
       - name: Instalar pnpm y dependencias
         shell: bash
-        # Esto ignora cualquier configuración de pnpm previa y crea el entorno desde cero
+        # Evita bloqueos por desincronización de lockfile y configuración de overrides
         run: |
           npm install -g pnpm@11
-          pnpm config set auto-install-peers true
-          pnpm install --force
-          pnpm run build
+          pnpm install --no-frozen-lockfile
 
       - name: Ejecutar script de actualización
         env:
