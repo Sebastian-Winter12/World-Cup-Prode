@@ -1,7 +1,6 @@
 import { db } from "@workspace/db";
-import { matchesTable } from "@workspace/db/schema";
-import { eq } from "drizzle-orm";
-
+import { matchesTable, predictionsTable } from "@workspace/db/schema"; // Asegúrate de importar predictionsTable
+import { eq, count } from "drizzle-orm"; // Asegúrate de importar count
 const API_TOKEN = process.env.API_TOKEN;
 
 // Mapeo de estados de la API externa a los estados de tu Base de Datos
@@ -24,7 +23,6 @@ async function main() {
   }
 
   console.log("🔄 Consultando actualizaciones de partidos en la API...");
-
   try {
     const res = await fetch(
       "https://api.football-data.org/v4/competitions/2000/matches?season=2026",

@@ -6,8 +6,8 @@ import { matchesTable } from "./matches";
 
 export const predictionsTable = pgTable("predictions", {
   id: serial("id").primaryKey(),
-  matchId: integer("match_id").notNull().references(() => matchesTable.id),
-  userId: integer("user_id").notNull().references(() => usersTable.id),
+  matchId: integer("match_id").notNull().references(() => matchesTable.id, { onDelete: "restrict" }),
+  userId: integer("user_id").notNull().references(() => usersTable.id, { onDelete: "cascade" }),
   homeGoals: integer("home_goals").notNull(),
   awayGoals: integer("away_goals").notNull(),
   points: integer("points"),
