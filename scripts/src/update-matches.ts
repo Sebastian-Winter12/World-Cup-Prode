@@ -1,6 +1,6 @@
 import { db } from "@workspace/db";
 import { matchesTable, predictionsTable } from "@workspace/db/schema"; // Asegúrate de importar predictionsTable
-import { eq, count } from "drizzle-orm"; // Asegúrate de importar count
+import { eq } from "drizzle-orm"; // Asegúrate de importar count
 const API_TOKEN = process.env.API_TOKEN;
 
 // Mapeo de estados de la API externa a los estados de tu Base de Datos
@@ -60,21 +60,42 @@ async function main() {
         currentDbMatch.awayScore !== newAwayScore;
 
       if (hasChanged) {
-        console.log(`🔹 Cambio detectado: ${currentDbMatch.homeTeam} vs ${currentDbMatch.awayTeam}`);
-        console.log(`   [Estado] DB: ${currentDbMatch.status} ➔ API: ${newStatus}`);
-        console.log(`   [Goles]  DB: ${currentDbMatch.homeScore}-${currentDbMatch.awayScore} ➔ API: ${newHomeScore}-${newAwayScore}`);
+  console.log(`🔹 Cambio detectado: ${currentDbMatch.homeTeam} vs ${currentDbMatch.awayTeam}`);
+  console.log(`   [Estado] DB: ${currentDbMatch.status} ➔ API: ${newStatus}`);
+  console.log(`   [Goles]  DB: ${currentDbMatch.homeScore}-${currentDbMatch.awayScore} ➔ API: ${newHomeScore}-${newAwayScore}`);
 
-        await db.update(matchesTable)
-          .set({
-            status: newStatus,
-            homeScore: newHomeScore,
-            awayScore: newAwayScore,
-            updatedAt: new Date(),
-          })
-          .where(eq(matchesTable.id, currentDbMatch.id));
+  await db.update(matchesTable)
+    .set({
+      status: newStatus,
+      homeScore: newHomeScore,
+      awayScore: newAwayScore,
+      updatedAt: new Date(),
+    })
+    .where(eq(matchesTable.id, currentDbMatch.id));
 
-        updatedCount++;
-      }
+  // Recalcular puntos cuando el partido termina
+  if (newStatus === "finished" && newHomeScore !== null && newAwayScore !== null) {
+    const predictions = await db
+      .select()
+      .from(predictionsTable)
+      .where(eq(predictionsTable.matchId, currentDbMatch.id));
+
+    for (const pred of predictions) {
+      const points = calculatePoints(pred, {
+        homeScore: newHomeScore,
+        awayScore: newAwayScore,
+        status: newStatus,
+      });
+      await db
+        .update(predictionsTable)
+        .set({ points })
+        .where(eq(predictionsTable.id, pred.id));
+    }
+    console.log(`   ✅ Puntos recalculados para ${predictions.length} predicciones`);
+  }
+
+  updatedCount++;
+}
     }
 
     console.log(`\n✅ Sincronización finalizada. Se actualizaron ${updatedCount} partidos.`);
@@ -84,6 +105,22 @@ async function main() {
     console.error("❌ Error crítico durante la actualización:", error);
     process.exit(1);
   }
+}
+
+function calculatePoints(
+  prediction: { homeGoals: number; awayGoals: number },
+  match: { homeScore: number | null; awayScore: number | null; status: string }
+): number | null {
+  if (match.status !== "finished" || match.homeScore === null || match.awayScore === null) {
+    return null;
+  }
+  const predWinner = Math.sign(prediction.homeGoals - prediction.awayGoals);
+  const actualWinner = Math.sign(match.homeScore - match.awayScore);
+  let points = 0;
+  if (predWinner === actualWinner) points += 5;
+  if (prediction.homeGoals === match.homeScore) points += 1;
+  if (prediction.awayGoals === match.awayScore) points += 1;
+  return points;
 }
 
 main();
