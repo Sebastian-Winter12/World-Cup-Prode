@@ -1,5 +1,5 @@
 import { Router, type IRouter } from "express";
-import { eq, and, gte, lte } from "drizzle-orm";
+import { eq, and, gte, lte, or, ilike } from "drizzle-orm";
 import { db, matchesTable, predictionsTable } from "@workspace/db";
 import {
   GetMatchParams,
@@ -73,6 +73,26 @@ router.get("/matches", requireAuth, ensureUser, async (req: any, res): Promise<v
   }
 
   const matches = await query.orderBy(matchesTable.matchDate);
+  const result = await Promise.all(matches.map((m) => matchWithPrediction(m, req.dbUser.id)));
+  res.json(result);
+});
+
+router.get("/matches/search", requireAuth, ensureUser, async (req: any, res): Promise<void> => {
+  const q = typeof req.query.q === "string" ? req.query.q.trim() : "";
+  if (!q) {
+    res.status(400).json({ error: "Query parameter 'q' is required" });
+    return;
+  }
+
+  const matches = await db
+    .select()
+    .from(matchesTable)
+    .where(or(
+      ilike(matchesTable.homeTeam, `%${q}%`),
+      ilike(matchesTable.awayTeam, `%${q}%`)
+    ))
+    .orderBy(matchesTable.matchDate);
+
   const result = await Promise.all(matches.map((m) => matchWithPrediction(m, req.dbUser.id)));
   res.json(result);
 });

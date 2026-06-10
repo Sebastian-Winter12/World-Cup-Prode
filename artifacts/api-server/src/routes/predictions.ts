@@ -6,9 +6,8 @@ import { requireAuth, ensureUser } from "./users";
 
 const router: IRouter = Router();
 
-// Predictions locked 24 hours before tournament starts (June 11, 2026)
-const TOURNAMENT_START = new Date("2026-06-11T20:00:00Z");
-const LOCK_DEADLINE = new Date(TOURNAMENT_START.getTime() - 24 * 60 * 60 * 1000);
+const LOCK_MINUTES_BEFORE_MATCH = 5;
+
 
 router.get("/predictions", requireAuth, ensureUser, async (req: any, res): Promise<void> => {
   const predictions = await db
@@ -37,23 +36,25 @@ router.put("/predictions/:matchId", requireAuth, ensureUser, async (req: any, re
     return;
   }
 
-  // Check if predictions are locked
-  if (new Date() >= LOCK_DEADLINE) {
-    res.status(400).json({ error: "Predictions are locked 24 hours before the tournament starts" });
-    return;
-  }
-
   const [match] = await db.select().from(matchesTable).where(eq(matchesTable.id, params.data.matchId));
-  if (!match) {
-    res.status(404).json({ error: "Match not found" });
-    return;
-  }
+if (!match) {
+  res.status(404).json({ error: "Match not found" });
+  return;
+}
 
-  // Check if match already started
-  if (match.status !== "scheduled") {
-    res.status(400).json({ error: "Cannot predict on a match that has already started" });
-    return;
-  }
+// Check if predictions are locked for this match
+const matchTime = new Date(match.matchDate);
+const lockTime = new Date(matchTime.getTime() - LOCK_MINUTES_BEFORE_MATCH * 60 * 1000);
+if (new Date() >= lockTime) {
+  res.status(400).json({ error: "Predictions are locked 30 minutes before the match starts" });
+  return;
+}
+
+// Check if match already started
+if (match.status !== "scheduled") {
+  res.status(400).json({ error: "Cannot predict on a match that has already started" });
+  return;
+}
 
   const [existing] = await db
     .select()
