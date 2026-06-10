@@ -20,7 +20,7 @@ export const en = {
     yourGroups: "Your Groups",
     members: "members",
     noGroups: "You haven't joined any groups yet.",
-    liveMatches: "Live Matches,",
+    liveMatches: "Live Matches",
     noLiveMatches: "No live matches at the moment.",
   },
   matches: {

@@ -1,15 +1,36 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useListMatches } from "@workspace/api-client-react";
 import { Layout } from "@/components/layout";
 import { MatchCard } from "@/components/match-card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
+import { translations } from "@/i18n/translations"; // ajustá el path
 import { useI18n } from "@/i18n/context";
+import { useDebounce } from "@/hooks/use-debounce";
+import { customFetch } from "@workspace/api-client-react";
 
 export default function Matches() {
   const { t } = useI18n();
   const [stage, setStage] = useState<string>("all");
   const [status, setStatus] = useState<string>("all");
+  const [search, setSearch] = useState<string>("");
+  const [searchResults, setSearchResults] = useState<any[] | null>(null);
+  const [searchLoading, setSearchLoading] = useState(false);
+  const { lang } = useI18n();
+
+  function normalize(str: string): string {
+  return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+}
+
+function translateToEnglish(query: string): string {
+  const teamTranslations = translations[lang].teams;
+  const entry = Object.entries(teamTranslations).find(([_en, translated]) =>
+    normalize(translated).includes(normalize(query))
+  );
+  return entry ? entry[0] : query;
+}
+  const debouncedSearch = useDebounce(search, 400);
 
   const { data: matches, isLoading } = useListMatches({
     stage: stage !== "all" ? stage : undefined,
@@ -17,6 +38,23 @@ export default function Matches() {
   }, {
     query: { refetchInterval: 60000 } as any
   });
+
+  useEffect(() => {
+  if (!debouncedSearch.trim()) {
+    setSearchResults(null);
+    return;
+  }
+  
+  setSearchLoading(true);
+  const englishQuery = translateToEnglish(debouncedSearch);
+  customFetch<any[]>(`/api/matches/search?q=${encodeURIComponent(englishQuery)}`)
+    .then(data => setSearchResults(data))
+    .catch(() => setSearchResults([]))
+    .finally(() => setSearchLoading(false));
+}, [debouncedSearch]);
+
+  const displayMatches = searchResults ?? matches;
+  const loading = searchResults ? searchLoading : isLoading;
 
   return (
     <Layout>
@@ -58,15 +96,22 @@ export default function Matches() {
               <SelectItem value="finished">{t.matches.finished}</SelectItem>
             </SelectContent>
           </Select>
+
+          <Input
+            placeholder="Buscar país..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            className="w-full sm:w-[200px]"
+          />
         </div>
 
-        {isLoading ? (
+        {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[1, 2, 3, 4, 5, 6].map(i => <Skeleton key={i} className="h-48" />)}
           </div>
-        ) : matches && matches.length > 0 ? (
+        ) : displayMatches && displayMatches.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {matches.map(match => (
+            {displayMatches.map(match => (
               <MatchCard key={match.id} match={match} />
             ))}
           </div>
