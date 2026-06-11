@@ -9,6 +9,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
 import { ThemeProvider } from "@/contexts/theme-context";
 import { I18nProvider } from "@/i18n/context";
+import Admin from "@/pages/admin";
 
 import Dashboard from "@/pages/dashboard";
 import Matches from "@/pages/matches";
@@ -195,6 +196,7 @@ function ClerkProviderWithRoutes() {
             <ProtectedRoute path="/groups" component={Groups} />
             <ProtectedRoute path="/groups/:groupId" component={GroupDetail} />
             <ProtectedRoute path="/profile" component={Profile} />
+            <ProtectedRoute path="/admin" component={Admin} />
             <Route component={NotFound} />
           </Switch>
           <Toaster />

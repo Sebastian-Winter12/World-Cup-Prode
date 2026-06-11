@@ -117,9 +117,8 @@ function calculatePoints(
   const predWinner = Math.sign(prediction.homeGoals - prediction.awayGoals);
   const actualWinner = Math.sign(match.homeScore - match.awayScore);
   let points = 0;
-  if (predWinner === actualWinner) points += 5;
-  if (prediction.homeGoals === match.homeScore) points += 1;
-  if (prediction.awayGoals === match.awayScore) points += 1;
+  if (predWinner === actualWinner) points += 3;
+  if (prediction.homeGoals === match.homeScore && prediction.awayGoals === match.awayScore) points += 1;
   return points;
 }
 

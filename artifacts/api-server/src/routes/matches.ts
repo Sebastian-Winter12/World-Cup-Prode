@@ -11,6 +11,15 @@ import { requireAuth, ensureUser } from "./users";
 import { calculatePoints } from "../lib/scoring";
 
 const router: IRouter = Router();
+const ADMIN_CLERK_ID = "user_3EVYiCvGQ24CfcJew9jLYd13HjE";
+
+const requireAdmin = (req: any, res: any, next: any) => {
+  if (req.clerkUserId !== ADMIN_CLERK_ID) {
+    res.status(403).json({ error: "Forbidden" });
+    return;
+  }
+  next();
+};
 
 const matchWithPrediction = async (match: any, userId?: number) => {
   let myPrediction = null;
@@ -152,6 +161,36 @@ router.patch("/matches/:matchId/score", requireAuth, ensureUser, async (req: any
         await db.update(predictionsTable).set({ points }).where(eq(predictionsTable.id, pred.id));
       })
     );
+  }
+
+  res.json({ ...match, matchDate: match.matchDate instanceof Date ? match.matchDate.toISOString() : match.matchDate });
+});
+
+router.patch("/matches/:matchId/admin-score", requireAuth, ensureUser, requireAdmin, async (req: any, res): Promise<void> => {
+  const matchId = parseInt(req.params.matchId, 10);
+  const { homeScore, awayScore, status } = req.body;
+
+  const [match] = await db
+    .update(matchesTable)
+    .set({ homeScore, awayScore, status, updatedAt: new Date() })
+    .where(eq(matchesTable.id, matchId))
+    .returning();
+
+  if (!match) {
+    res.status(404).json({ error: "Match not found" });
+    return;
+  }
+
+  if (status === "finished" && homeScore !== null && awayScore !== null) {
+    const predictions = await db
+      .select()
+      .from(predictionsTable)
+      .where(eq(predictionsTable.matchId, match.id));
+
+    await Promise.all(predictions.map(async (pred) => {
+      const points = calculatePoints(pred, match);
+      await db.update(predictionsTable).set({ points }).where(eq(predictionsTable.id, pred.id));
+    }));
   }
 
   res.json({ ...match, matchDate: match.matchDate instanceof Date ? match.matchDate.toISOString() : match.matchDate });

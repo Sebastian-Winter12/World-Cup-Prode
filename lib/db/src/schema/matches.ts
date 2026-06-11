@@ -21,6 +21,16 @@ export const matchesTable = pgTable("matches", {
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow().$onUpdate(() => new Date()),
 });
 
+const ADMIN_CLERK_ID = "user_3EVYiCvGQ24CfcJew9jLYd13HjE";
+
+export const requireAdmin = (req: any, res: any, next: any) => {
+  if (req.clerkUserId !== ADMIN_CLERK_ID) {
+    res.status(403).json({ error: "Forbidden" });
+    return;
+  }
+  next();
+};
+
 export const insertMatchSchema = createInsertSchema(matchesTable).omit({ id: true, createdAt: true, updatedAt: true });
 export type InsertMatch = z.infer<typeof insertMatchSchema>;
 export type Match = typeof matchesTable.$inferSelect;

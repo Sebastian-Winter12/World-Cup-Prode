@@ -19,14 +19,10 @@ export function calculatePoints(
   let points = 0;
 
   if (predWinner === actualWinner) {
-    points += 5;
+    points += 3;
   }
 
-  if (prediction.homeGoals === match.homeScore) {
-    points += 1;
-  }
-
-  if (prediction.awayGoals === match.awayScore) {
+  if (prediction.homeGoals === match.homeScore && prediction.awayGoals === match.awayScore) {
     points += 1;
   }
 
