@@ -18,13 +18,8 @@ export function calculatePoints(
 
   let points = 0;
 
-  if (predWinner === actualWinner) {
-    points += 3;
-  }
-
-  if (prediction.homeGoals === match.homeScore && prediction.awayGoals === match.awayScore) {
-    points += 1;
-  }
+  if (predWinner === actualWinner) points += 1;
+if (prediction.homeGoals === match.homeScore && prediction.awayGoals === match.awayScore) points += 3;
 
   return points;
 }

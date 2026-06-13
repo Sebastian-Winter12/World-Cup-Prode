@@ -28,16 +28,16 @@ async function main() {
       "https://api.football-data.org/v4/competitions/2000/matches?season=2026",
       { headers: { "X-Auth-Token": API_TOKEN } }
     );
-    
+
     const data: any = await res.json();
-    
+
     if (!data.matches) {
       console.error("❌ ERROR: La API no devolvió partidos válidos.", data);
       process.exit(1);
     }
 
     const apiMatches = data.matches;
-    
+
     // Traemos los partidos actuales de tu base de datos
     const dbMatches = await db.select().from(matchesTable);
     let updatedCount = 0;
@@ -60,42 +60,42 @@ async function main() {
         currentDbMatch.awayScore !== newAwayScore;
 
       if (hasChanged) {
-  console.log(`🔹 Cambio detectado: ${currentDbMatch.homeTeam} vs ${currentDbMatch.awayTeam}`);
-  console.log(`   [Estado] DB: ${currentDbMatch.status} ➔ API: ${newStatus}`);
-  console.log(`   [Goles]  DB: ${currentDbMatch.homeScore}-${currentDbMatch.awayScore} ➔ API: ${newHomeScore}-${newAwayScore}`);
+        console.log(`🔹 Cambio detectado: ${currentDbMatch.homeTeam} vs ${currentDbMatch.awayTeam}`);
+        console.log(`   [Estado] DB: ${currentDbMatch.status} ➔ API: ${newStatus}`);
+        console.log(`   [Goles]  DB: ${currentDbMatch.homeScore}-${currentDbMatch.awayScore} ➔ API: ${newHomeScore}-${newAwayScore}`);
 
-  await db.update(matchesTable)
-    .set({
-      status: newStatus,
-      homeScore: newHomeScore,
-      awayScore: newAwayScore,
-      updatedAt: new Date(),
-    })
-    .where(eq(matchesTable.id, currentDbMatch.id));
+        await db.update(matchesTable)
+          .set({
+            status: newStatus,
+            homeScore: newHomeScore,
+            awayScore: newAwayScore,
+            updatedAt: new Date(),
+          })
+          .where(eq(matchesTable.id, currentDbMatch.id));
 
-  // Recalcular puntos cuando el partido termina
-  if (newStatus === "finished" && newHomeScore !== null && newAwayScore !== null) {
-    const predictions = await db
-      .select()
-      .from(predictionsTable)
-      .where(eq(predictionsTable.matchId, currentDbMatch.id));
+        // Recalcular puntos cuando el partido termina
+        if (newStatus === "finished" && newHomeScore !== null && newAwayScore !== null) {
+          const predictions = await db
+            .select()
+            .from(predictionsTable)
+            .where(eq(predictionsTable.matchId, currentDbMatch.id));
 
-    for (const pred of predictions) {
-      const points = calculatePoints(pred, {
-        homeScore: newHomeScore,
-        awayScore: newAwayScore,
-        status: newStatus,
-      });
-      await db
-        .update(predictionsTable)
-        .set({ points })
-        .where(eq(predictionsTable.id, pred.id));
-    }
-    console.log(`   ✅ Puntos recalculados para ${predictions.length} predicciones`);
-  }
+          for (const pred of predictions) {
+            const points = calculatePoints(pred, {
+              homeScore: newHomeScore,
+              awayScore: newAwayScore,
+              status: newStatus,
+            });
+            await db
+              .update(predictionsTable)
+              .set({ points })
+              .where(eq(predictionsTable.id, pred.id));
+          }
+          console.log(`   ✅ Puntos recalculados para ${predictions.length} predicciones`);
+        }
 
-  updatedCount++;
-}
+        updatedCount++;
+      }
     }
 
     console.log(`\n✅ Sincronización finalizada. Se actualizaron ${updatedCount} partidos.`);
@@ -117,8 +117,8 @@ function calculatePoints(
   const predWinner = Math.sign(prediction.homeGoals - prediction.awayGoals);
   const actualWinner = Math.sign(match.homeScore - match.awayScore);
   let points = 0;
-  if (predWinner === actualWinner) points += 3;
-  if (prediction.homeGoals === match.homeScore && prediction.awayGoals === match.awayScore) points += 1;
+  if (predWinner === actualWinner) points += 1;
+  if (prediction.homeGoals === match.homeScore && prediction.awayGoals === match.awayScore) points += 3;
   return points;
 }
 
